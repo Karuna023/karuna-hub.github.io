@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KarunaHub - Find Your Perfect Car</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d1117; /* Dark background */
+            color: #ffffff;
+        }
+<!-- Paste inside <body> -->
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+  var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+  s1.async=true;
+  s1.src='https://embed.tawk.to/YOUR_PROPERTY_ID/default';
+  s1.charset='UTF-8';
+  s1.setAttribute('crossorigin','*');
+  s0.parentNode.insertBefore(s1,s0);
+})();
+<script>
+document.getElementById('testDriveForm').addEventListener('submit', function(e){
+    e.preventDefault();
+
+    const form = e.target;
+
+    const name = form.querySelector('[name="Name"]').value;
+    const email = form.querySelector('[name="Email"]').value;
+    const phone = form.querySelector('[name="Phone"]').value;
+    const car = form.querySelector('[name="Car"]').value;
+    const date = form.querySelector('[name="Date"]').value;
+
+    // ✅ SUCCESS POPUP
+    alertUserMessage(`✅ Success! ${name}, your test drive is booked!`, 'success');
+
+    // ✅ COPY TO WHATSAPP
+    const whatsappText = `Test Drive Booking:
+Name: ${name}
+Phone: ${phone}
+Car: ${car}
+Date: ${date}`;
+    navigator.clipboard.writeText(whatsappText);
+
+    // ✅ GOOGLE SHEET (ENABLE THIS WHEN READY)
+    /*
+    fetch("https://sheetdb.io/api/v1/YOUR_SHEET_ID", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({
+        data: {name, email, phone, car, date}
+      })
+    });
+    */
+
+    // ✅ SMS PLACEHOLDER
+    /*
+    fetch("https://sms-api-url.com/send", {
+      method: "POST",
+      headers: {"Authorization": "Bearer YOUR_API_KEY"},
+      body: JSON.stringify({
+        number: phone,
+        message: "Thank you! Your test drive is confirmed."
+      })
+    })
+    */
+
+    // ✅ SUBMIT FORM (EMAIL SEND)
+    setTimeout(() => {
+        form.submit();
+    }, 1200);
+});
+</script>
+
+</script>
+
+        /* Custom scrollbar for a sleek look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1f2937;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4b5563;
+        }
+        .sidebar-visible {
+            transform: translateX(0);
+        }
+        .sidebar-hidden {
+            transform: translateX(-100%);
+        }
+        @media (min-width: 768px) {
+            .sidebar-hidden {
+                transform: translateX(0); /* Always visible on desktop */
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="min-h-screen">
+
+    <!-- Header & Navigation -->
+    <header class="bg-gray-900 shadow-xl sticky top-0 z-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex-shrink-0">
+                    <span class="text-3xl font-extrabold text-green-400">Karuna<span class="text-white">Hub</span></span>
+                </div>
+                <!-- Desktop Nav -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#listings" class="text-gray-300 hover:text-green-400 transition duration-150">Listings</a>
+                    <a href="#finance-calculator" class="text-gray-300 hover:text-green-400 transition duration-150">Finance</a>
+                    <a href="#contact" class="text-gray-300 hover:text-green-400 transition duration-150">Dealers</a>
+                   
+                </nav>
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuButton" class="md:hidden text-gray-400 hover:text-white focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+
+
+    <!-- Main Content Grid -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 flex flex-col md:flex-row gap-8">
+
+        <!-- Search & Filter Sidebar -->
+        <aside id="filterSidebar" class="fixed inset-y-0 left-0 z-30 w-64 bg-gray-800 p-6 md:relative md:w-80 md:translate-x-0 transition-transform duration-300 ease-in-out sidebar-hidden shadow-2xl md:shadow-none">
+            
+            <button id="closeSidebarBtn" class="absolute top-4 right-4 text-gray-400 hover:text-white md:hidden">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+
+            <h2 class="text-2xl font-bold mb-6 text-green-400 pt-8 md:pt-0">Filter Cars</h2>
+            
+            <div class="space-y-6">
+                <!-- Brand Filter -->
+                <div>
+                    <label for="brandFilter" class="block text-sm font-medium text-gray-300 mb-2">Brand</label>
+                    <select id="brandFilter" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-green-500 focus:border-green-500">
+                        <option value="">All Brands</option>
+                    </select>
+                </div>
+
+                <!-- Price Range Filter -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Price Range</label>
+                    <div class="flex justify-between text-xs text-gray-400 mb-1">
+                        <span id="minPriceDisplay">$20,000</span>
+                        <span id="maxPriceDisplay">$80,000+</span>
+                    </div>
+                    <input type="range" id="priceRange" min="20000" max="80000" step="5000" value="80000" class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer range-lg accent-green-500">
+                </div>
+
+                <!-- Mileage Filter -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Max Mileage (Miles)</label>
+                    <input type="number" id="mileageFilter" placeholder="e.g. 50000" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-green-500 focus:border-green-500">
+                </div>
+                
+                <!-- Fuel Type Filter -->
+                <div>
+                    <label for="fuelFilter" class="block text-sm font-medium text-gray-300 mb-2">Fuel Type</label>
+                    <select id="fuelFilter" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-green-500 focus:border-green-500">
+                        <option value="">Any Fuel Type</option>
+                        <option value="Gasoline">Gasoline</option>
+                        <option value="Electric">Electric</option>
+                        <option value="Hybrid">Hybrid</option>
+                    </select>
+                </div>
+
+                <button id="applyFiltersBtn" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3 rounded-lg transition duration-150 shadow-lg shadow-green-900/50">
+                    Apply Filters
+                </button>
+            </div>
+        </aside>
+
+        <!-- Listings Section -->
+        <section id="listings" class="flex-grow">
+            <h1 class="text-4xl font-extrabold mb-8">Available Car Listings</h1>
+            
+            <button id="toggleSidebarBtn" class="md:hidden bg-gray-700 text-white py-2 px-4 rounded-lg mb-4 flex items-center">
+                <i class="fas fa-filter mr-2"></i> Show Filters
+            </button>
+
+            <div id="carListings" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <!-- Car cards will be injected here by JavaScript -->
+            </div>
+
+            <div id="noResults" class="hidden text-center py-12 text-gray-400">
+                <i class="fas fa-exclamation-triangle text-5xl mb-4 text-yellow-500"></i>
+                <p class="text-xl font-semibold">No cars match your current filters.</p>
+                <p>Try broadening your search criteria.</p>
+            </div>
+        </section>
+    </main>
+
+
+    <!-- Finance Calculator Section -->
+    <section id="finance-calculator" class="bg-gray-900 py-16 mt-16 shadow-inner">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center mb-10 text-green-400">Finance & Loan Calculator</h2>
+            
+            <div class="bg-gray-800 p-8 rounded-xl shadow-2xl">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Inputs -->
+                    <div class="space-y-4">
+                        <div>
+                            <label for="carPrice" class="block text-sm font-medium text-gray-300">Car Price ($)</label>
+                            <input type="number" id="carPrice" value="30000" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-green-500 focus:border-green-500" min="1000">
+                        </div>
+                        <div>
+                            <label for="downPayment" class="block text-sm font-medium text-gray-300">Down Payment ($)</label>
+                            <input type="number" id="downPayment" value="5000" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-green-500 focus:border-green-500" min="0">
+                        </div>
+                        <div>
+                            <label for="loanTerm" class="block text-sm font-medium text-gray-300">Loan Term (Years)</label>
+                            <select id="loanTerm" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-green-500 focus:border-green-500">
+                                <option value="3">3 Years</option>
+                                <option value="4">4 Years</option>
+                                <option value="5" selected>5 Years</option>
+                                <option value="6">6 Years</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="interestRate" class="block text-sm font-medium text-gray-300">Annual Interest Rate (%)</label>
+                            <input type="number" id="interestRate" value="6.5" step="0.1" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-green-500 focus:border-green-500" min="0.1" max="20">
+                        </div>
+                    </div>
+
+                    <!-- Results -->
+                    <div class="flex flex-col justify-center bg-gray-700 p-6 rounded-lg shadow-inner">
+                        <h3 class="text-xl font-semibold mb-4 text-center text-green-300">Estimated Monthly Payment</h3>
+                        <div id="monthlyPaymentDisplay" class="text-6xl font-extrabold text-center text-white mb-6">$500.00</div>
+                        <div class="text-center">
+                            <p class="text-sm text-gray-400">Total Principal: <span id="totalPrincipal">$25,000</span></p>
+                            <p class="text-sm text-gray-400">Total Interest Paid: <span id="totalInterest">$5,000</span></p>
+                            <button onclick="calculatePayment()" class="mt-6 bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-6 rounded-lg transition duration-150">
+                                Recalculate
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Test Drive/Reviews/Dealer Locator Section -->
+    <section id="contact" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <h2 class="text-3xl font-bold text-center mb-12 text-green-400">Next Steps & Community</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Test Drive Booking Card -->
+            <div class="bg-gray-800 p-6 rounded-xl shadow-xl hover:shadow-green-700/30 transition duration-300">
+                <h3 class="text-xl font-bold mb-4 text-white flex items-center"><i class="fas fa-calendar-alt mr-3 text-green-400"></i> Book a Test Drive</h3>
+                <p class="text-gray-400 mb-4">Experience your next car in person. Schedule a slot at your nearest dealership.</p>
+               <form id="testDriveForm"
+      action="https://formsubmit.co/dk190857@gmail.com"
+      method="POST">
+
+<input type="text" name="Name" placeholder="Your Name" required
+class="w-full p-3 mb-3 bg-gray-700 border border-gray-600 rounded-lg text-white">
+
+<input type="email" name="Email" placeholder="Your Email" required
+class="w-full p-3 mb-3 bg-gray-700 border border-gray-600 rounded-lg text-white">
+
+<input type="tel" name="Phone" placeholder="Your Phone Number" required
+class="w-full p-3 mb-3 bg-gray-700 border border-gray-600 rounded-lg text-white">
+
+<input type="text" name="Car" placeholder="Car Model Interested" required
+class="w-full p-3 mb-3 bg-gray-700 border border-gray-600 rounded-lg text-white">
+
+<input type="date" name="Date" required
+class="w-full p-3 mb-4 bg-gray-700 border border-gray-600 rounded-lg text-white">
+
+<!-- EMAIL SETTINGS -->
+<input type="hidden" name="_subject" value="New Test Drive Booking">
+<input type="hidden" name="_captcha" value="false">
+
+<!-- Redirect after submit -->
+<input type="hidden" name="_next" value="thankyou.html">
+
+<button type="submit"
+class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3 rounded-lg transition duration-150">
+Book Now
+</button>
+
+</form>
+
+            </div>
+
+            <!-- Customer Reviews Card -->
+            <div class="bg-gray-800 p-6 rounded-xl shadow-xl">
+                <h3 class="text-xl font-bold mb-4 text-white flex items-center"><i class="fas fa-star mr-3 text-yellow-400"></i> Customer Reviews</h3>
+                <div class="space-y-4 h-48 overflow-y-auto">
+                    <!-- Review 1 -->
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <div class="text-yellow-400 text-sm mb-1"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                        <p class="text-sm text-gray-300 italic">"The search feature made finding my dream truck so easy. Excellent service!" - Alex P.</p>
+                    </div>
+                    <!-- Review 2 -->
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <div class="text-yellow-400 text-sm mb-1"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div>
+                        <p class="text-sm text-gray-300 italic">"Accurate mileage and price, the comparison tool was super helpful." - Jamie L.</p>
+                    </div>
+                    <!-- Review 3 -->
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <div class="text-yellow-400 text-sm mb-1"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                        <p class="text-sm text-gray-300 italic">"Smooth process from browsing to test drive." - Maya K.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dealer Locator Card -->
+            <div class="bg-gray-800 p-6 rounded-xl shadow-xl">
+                <h3 class="text-xl font-bold mb-4 text-white flex items-center"><i class="fas fa-map-marker-alt mr-3 text-green-400"></i> Dealer Locator</h3>
+                <p class="text-gray-400 mb-4">Find contact information and opening hours for the closest showroom.</p>
+                <div class="space-y-3">
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <p class="font-semibold">KarunaHub Downtown</p>
+                        <p class="text-sm text-gray-400">123 Market St, Suite 100</p>
+                        <p class="text-sm text-green-400">Open 9:00 AM - 7:00 PM</p>
+                    </div>
+                    <div class="p-3 bg-gray-700 rounded-lg">
+                        <p class="font-semibold">KarunaHub Northside</p>
+                        <p class="text-sm text-gray-400">456 Industrial Blvd, Building B</p>
+                        <p class="text-sm text-green-400">Open 10:00 AM - 6:00 PM</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+   
+    <!-- Footer -->
+    <footer class="bg-gray-900 mt-12 py-8 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-400 text-sm">
+            <p>&copy; KARUNAKARAN. | <a href="#" class="hover:text-green-400">Privacy Policy</a> | <a href="#" class="hover:text-green-400">Terms of Service</a></p>
+            <p class="mt-2">Inventory is updated in real-time. Prices are estimates and subject to change.</p>
+        </div>
+    </footer>
+
+
+    <script>
+        const API_KEY = ""; // Placeholder for Gemini API Key (Canvas will provide)
+        const CAR_LISTINGS_CONTAINER = document.getElementById('carListings');
+        const BRAND_FILTER = document.getElementById('brandFilter');
+        const PRICE_RANGE = document.getElementById('priceRange');
+        const MILEAGE_FILTER = document.getElementById('mileageFilter');
+        const FUEL_FILTER = document.getElementById('fuelFilter');
+        const APPLY_FILTERS_BTN = document.getElementById('applyFiltersBtn');
+        const NO_RESULTS_MSG = document.getElementById('noResults');
+        
+        // --- Mock Data (Highly detailed car listings) ---
+        const MOCK_CARS = [
+            { id: 1, brand: 'Toyota', model: 'Camry XSE', year: 2023, price: 28500, mileage: 5000, fuel: 'Gasoline', hp: 203, spec: 'Luxurious sedan with low mileage.', img: 'https://tmna.aemassets.toyota.com/is/image/toyota/toyota/vehicles/2026/camry/galleries/CAH_MY26_0009_V001.png:tcom_gallery_16x9' },
+            { id: 2, brand: 'Tesla', model: 'Model 3 LR', year: 2024, price: 45000, mileage: 100, fuel: 'Electric', hp: 283, spec: 'Nearly new electric vehicle, long range.', img: 'https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto/Model-3-Toggle-Standard-Desktop.jpg' },
+            { id: 3, brand: 'Honda', model: 'CR-V EX-L', year: 2022, price: 24000, mileage: 15000, fuel: 'Gasoline', hp: 190, spec: 'Spacious and reliable SUV, excellent condition.', img: 'https://automobiles.honda.com/-/media/Honda-Automobiles/Vehicles/2026/CR-V/OP-360/G-545M_Ash_Green_Metallic/Small/Honda_2026_CRV_360_Exterior_Ash_Green_Metallic_0001.png?sc_lang=en' },
+            { id: 4, brand: 'Ford', model: 'F-150 Lariat', year: 2021, price: 41000, mileage: 30000, fuel: 'Gasoline', hp: 400, spec: 'Powerful truck with full towing package.', img: 'https://www.ford.com/acslibs/content/dam/na/ford/en_us/images/f-150/2026/jellybeans/26_frd_f15_stx_scc_4x4_agbl_ps34.png' },
+            { id: 5, brand: 'BMW', model: 'X5 xDrive40i', year: 2020, price: 38000, mileage: 45000, fuel: 'Gasoline', hp: 335, spec: 'Premium German luxury SUV, fully loaded.', img: 'https://imgd.aeplcdn.com/664x374/n/cw/ec/152681/x5-exterior-right-front-three-quarter-5.jpeg?isig=0&q=80' },
+            { id: 6, brand: 'Nissan', model: 'Leaf S', year: 2024, price: 29999, mileage: 50, fuel: 'Electric', hp: 147, spec: 'Affordable new electric commuter.', img: 'https://www.nissanusa.com/content/dam/Nissan/us/vehicles/leaf/2026/overview/pfa/2026-nissan-leaf-all-electric-suv-t.jpg' },
+            { id: 7, brand: 'Subaru', model: 'Outback Limited', year: 2022, price: 31500, mileage: 22000, fuel: 'Gasoline', hp: 182, spec: 'AWD wagon, great for all weather conditions.', img: 'https://s7d1.scene7.com/is/image/scomv2/26_OBK_gallery_ext_01?$1000w$' },
+            { id: 8, brand: 'Porsche', model: '911 Carrera', year: 2018, price: 75000, mileage: 18000, fuel: 'Gasoline', hp: 370, spec: 'Iconic sports car, immaculately maintained.', img: 'https://images-porsche.imgix.net/-/media/E90B7A2B2C2743ADA127FF2CD80046D0_AD6C55140CEA4574B71A358E38E40352_CZ25W12OX0005-911-carrera-gts-side?w=699&q=85&auto=format' },
+        ];
+
+        let currentCarData = [...MOCK_CARS];
+
+        // --- Utility Functions ---
+
+        /**
+         * Formats a number into a currency string (e.g., 28500 -> $28,500)
+         * @param {number} amount
+         * @returns {string}
+         */
+        const formatCurrency = (amount) => {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+            }).format(amount);
+        };
+
+        /**
+         * Formats a number with commas (e.g., 5000 -> 5,000)
+         * @param {number} num
+         * @returns {string}
+         */
+        const formatNumber = (num) => {
+            return new Intl.NumberFormat('en-US').format(num);
+        };
+
+        // --- Core Rendering Functions ---
+
+        /**
+         * Renders a single car card HTML element.
+         * @param {Object} car - The car data object.
+         * @returns {string} The HTML string for the car card.
+         */
+        const renderCarCard = (car) => {
+            return `
+                <div class="bg-gray-800 rounded-xl overflow-hidden shadow-2xl transition-all duration-300 hover:shadow-green-500/50 transform hover:-translate-y-1">
+                    <img src="${car.img}" alt="${car.brand} ${car.model}" class="w-full h-40 object-cover" loading="lazy" 
+                        onerror="this.onerror=null; this.src='https://placehold.co/600x400/1f2937/ffffff?text=Image+Unavailable';">
+                    
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold text-white">${car.brand} <span class="text-green-400">${car.model}</span></h3>
+                            <span class="text-sm font-semibold text-gray-400 bg-gray-700 py-1 px-3 rounded-full">${car.year}</span>
+                        </div>
+                        
+                        <p class="text-3xl font-extrabold text-green-400 mb-3">${formatCurrency(car.price)}</p>
+
+                        <p class="text-sm text-gray-400 mb-3">${car.spec}</p>
+
+                        <div class="grid grid-cols-2 gap-2 text-sm text-gray-300 border-t border-b border-gray-700 py-3 mb-4">
+                            <div class="flex items-center"><i class="fas fa-tachometer-alt mr-2 text-green-400"></i> ${formatNumber(car.mileage)} mi</div>
+                            <div class="flex items-center"><i class="fas fa-gas-pump mr-2 text-green-400"></i> ${car.fuel}</div>
+                            <div class="flex items-center"><i class="fas fa-horse mr-2 text-green-400"></i> ${car.hp} HP</div>
+                            <div class="flex items-center"><i class="fas fa-video mr-2 text-green-400"></i> 360&deg; Tour</div>
+                        </div>
+
+                        <div class="flex space-x-2">
+                            <button class="flex-1 bg-green-600 hover:bg-green-500 text-white font-semibold py-2 rounded-lg text-sm transition duration-150">
+                                View Details
+                            </button>
+                            <button class="bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2 px-3 rounded-lg text-sm transition duration-150" title="Add to Compare">
+                                <i class="fas fa-balance-scale"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        };
+
+        /**
+         * Updates the main listings section with filtered car data.
+         * @param {Array} cars - The array of car objects to display.
+         */
+        const updateCarListings = (cars) => {
+            CAR_LISTINGS_CONTAINER.innerHTML = cars.map(renderCarCard).join('');
+            
+            if (cars.length === 0) {
+                NO_RESULTS_MSG.classList.remove('hidden');
+            } else {
+                NO_RESULTS_MSG.classList.add('hidden');
+            }
+        };
+
+        /**
+         * Populates the Brand filter dropdown with unique brands from MOCK_CARS.
+         */
+        const populateBrandFilter = () => {
+            const brands = [...new Set(MOCK_CARS.map(car => car.brand))].sort();
+            brands.forEach(brand => {
+                const option = document.createElement('option');
+                option.value = brand;
+                option.textContent = brand;
+                BRAND_FILTER.appendChild(option);
+            });
+        };
+
+        // --- Filtering Logic ---
+
+        /**
+         * Applies all filters to the MOCK_CARS data and updates the display.
+         */
+        const applyFilters = () => {
+            const selectedBrand = BRAND_FILTER.value;
+            const maxPrice = parseInt(PRICE_RANGE.value);
+            const maxMileage = parseInt(MILEAGE_FILTER.value) || Infinity; // Treat empty/NaN as no limit
+            const selectedFuel = FUEL_FILTER.value;
+
+            const filteredCars = MOCK_CARS.filter(car => {
+                // 1. Brand Filter
+                if (selectedBrand && car.brand !== selectedBrand) {
+                    return false;
+                }
+                // 2. Price Filter
+                if (car.price > maxPrice) {
+                    return false;
+                }
+                // 3. Mileage Filter
+                if (car.mileage > maxMileage) {
+                    return false;
+                }
+                // 4. Fuel Type Filter
+                if (selectedFuel && car.fuel !== selectedFuel) {
+                    return false;
+                }
+                return true;
+            });
+            
+            currentCarData = filteredCars;
+            updateCarListings(currentCarData);
+
+            // Hide sidebar on mobile after applying filters
+            if (window.innerWidth < 768) {
+                document.getElementById('filterSidebar').classList.remove('sidebar-visible');
+                document.getElementById('filterSidebar').classList.add('sidebar-hidden');
+            }
+        };
+
+        // --- Finance Calculator Logic ---
+
+        /**
+         * Calculates the estimated monthly payment based on loan parameters.
+         */
+        const calculatePayment = () => {
+            const price = parseFloat(document.getElementById('carPrice').value);
+            const downPayment = parseFloat(document.getElementById('downPayment').value);
+            const termYears = parseFloat(document.getElementById('loanTerm').value);
+            const annualRate = parseFloat(document.getElementById('interestRate').value);
+
+            if (isNaN(price) || isNaN(downPayment) || isNaN(termYears) || isNaN(annualRate) || price <= 0 || downPayment < 0) {
+                document.getElementById('monthlyPaymentDisplay').textContent = 'Invalid Input';
+                document.getElementById('totalPrincipal').textContent = formatCurrency(0);
+                document.getElementById('totalInterest').textContent = formatCurrency(0);
+                return;
+            }
+
+            const principal = price - downPayment;
+            const termMonths = termYears * 12;
+            const monthlyRate = (annualRate / 100) / 12;
+            let monthlyPayment;
+            let totalInterest;
+            
+            if (monthlyRate === 0) {
+                // Simple case for 0% interest
+                monthlyPayment = principal / termMonths;
+                totalInterest = 0;
+            } else {
+                // Standard formula: M = P [ i(1 + i)^n ] / [ (1 + i)^n – 1]
+                monthlyPayment = principal * (monthlyRate * Math.pow(1 + monthlyRate, termMonths)) / (Math.pow(1 + monthlyRate, termMonths) - 1);
+                totalInterest = (monthlyPayment * termMonths) - principal;
+            }
+
+            document.getElementById('monthlyPaymentDisplay').textContent = formatCurrency(monthlyPayment);
+            document.getElementById('totalPrincipal').textContent = formatCurrency(principal);
+            document.getElementById('totalInterest').textContent = formatCurrency(totalInterest);
+        };
+
+
+
+        // --- Event Listeners & Initialization ---
+
+        window.onload = () => {
+            // Initial render
+            populateBrandFilter();
+            updateCarListings(MOCK_CARS);
+            calculatePayment(); // Calculate initial finance estimate
+
+            // Filter listeners
+            APPLY_FILTERS_BTN.addEventListener('click', applyFilters);
+            
+            // Price range slider display update
+            PRICE_RANGE.addEventListener('input', () => {
+                const value = parseInt(PRICE_RANGE.value);
+                document.getElementById('minPriceDisplay').textContent = formatCurrency(20000);
+                document.getElementById('maxPriceDisplay').textContent = (value >= 80000) ? '$80,000+' : formatCurrency(value);
+            });
+
+            // Finance calculator listeners
+            document.getElementById('carPrice').addEventListener('change', calculatePayment);
+            document.getElementById('downPayment').addEventListener('change', calculatePayment);
+            document.getElementById('loanTerm').addEventListener('change', calculatePayment);
+            document.getElementById('interestRate').addEventListener('change', calculatePayment);
+
+           document.getElementById('testDriveForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const name = form.querySelector('input[type="text"]').value;
+    alertUserMessage(`Success! Test drive for ${name} booked. We will contact you soon!`, 'success');
+    form.reset();
+});
+
+
+            // Mobile Sidebar Toggle
+            const sidebar = document.getElementById('filterSidebar');
+            const toggleBtn = document.getElementById('toggleSidebarBtn');
+            const closeBtn = document.getElementById('closeSidebarBtn');
+
+            toggleBtn.addEventListener('click', () => {
+                sidebar.classList.remove('sidebar-hidden');
+                sidebar.classList.add('sidebar-visible');
+            });
+
+            closeBtn.addEventListener('click', () => {
+                sidebar.classList.remove('sidebar-visible');
+                sidebar.classList.add('sidebar-hidden');
+            });
+            
+            // Chatbot Toggle
+            const chatbotOverlay = document.getElementById('chatbotOverlay');
+            document.getElementById('openChatbotBtn').addEventListener('click', () => {
+                chatbotOverlay.classList.remove('hidden');
+            });
+            document.getElementById('closeChatbotBtn').addEventListener('click', () => {
+                chatbotOverlay.classList.add('hidden');
+            });
+        };
+
+        // --- Custom Message Box Utility (Replaces alert()) ---
+
+        /**
+         * Displays a custom, non-blocking message to the user.
+         * @param {string} message 
+         * @param {string} type - 'success', 'error', or 'info'
+         */
+        function alertUserMessage(message, type = 'info') {
+            let container = document.getElementById('userMessageContainer');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'userMessageContainer';
+                container.className = 'fixed top-4 right-4 z-50 space-y-2';
+                document.body.appendChild(container);
+            }
+
+            const alertDiv = document.createElement('div');
+            let bgColor = 'bg-blue-600';
+            let icon = 'fas fa-info-circle';
+            
+            if (type === 'success') {
+                bgColor = 'bg-green-600';
+                icon = 'fas fa-check-circle';
+            } else if (type === 'error') {
+                bgColor = 'bg-red-600';
+                icon = 'fas fa-times-circle';
+            }
+
+            alertDiv.className = `${bgColor} text-white px-4 py-3 rounded-lg shadow-xl flex items-center min-w-[250px]`;
+            alertDiv.innerHTML = `<i class="${icon} mr-3"></i> <span>${message}</span>`;
+            
+            container.appendChild(alertDiv);
+
+            // Automatically remove the message after 4 seconds
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 4000);
+        }
+
+    </script>
+</body>
+</html>
